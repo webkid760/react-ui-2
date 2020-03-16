@@ -3,15 +3,22 @@ import logo from './logo.svg';
 import {Button,Alert,Loading} from './components/index'
 import './components/index.css'
 import './App.css';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from '@apollo/react-hooks';
+
 
 function App() {
+const client = new ApolloClient({
+  uri:"http://localhost:4000"
+});  
 
   return (
+    <ApolloProvider client={client}>
     <div className="App">
       <header className="App-header">
         <div style={{padding:"10px 0"}}>
         <h1>Button</h1>
-        <Button name="123" onClick={()=>alert(123)} types={{a:122,b:33}}/>
+        <Button name="123" types={{a:122,b:33}}/>
         </div>
         <div style={{padding:"10px 0"}}>
         <h1>Alert</h1>
@@ -35,6 +42,7 @@ function App() {
         </a>*/}
       </header>
     </div>
+    </ApolloProvider>
   );
 }
 
