@@ -1,66 +1,59 @@
-import React,{useState} from 'react';
-
+import React, { useState } from 'react'
+import classnames from 'classnames'
 import PropTypes from 'prop-types'
+import './index.css'
 
-
+/**
+ * 警告提示组件
+ * @param {style} object 更改Alert样式
+ * @param {closable} bool 是否显示关闭按钮, 默认不显示
+ * @param {closeText} string|reactNode 自定义关闭按钮
+ * @param {message} string 警告提示内容
+ * @param {description} string 警告提示的辅助性文字
+ * @param {type} string 警告的类型
+ * @param {onClose} func 关闭时触发的事件
+ */
 function Alert(props) {
+  const {
+    style,
+    closable,
+    closeText,
+    message,
+    description,
+    type,
+    onClose
+  } = props
+  let [visible, setVisible] = useState(true)
 
-  // let defaults = {
-  // 	description:"123456",
-  // 	title:"i am alert",
-  // 	closeText:"壮",
-  // 	closable:true
-  // }
-  // props = Object.assign({},defaults,props);
-  
-  let {style,showIcon,description,closeText,type,title,closable} = props;
-
-  
-
-  const [visible,setVisible]=useState(true)
-
-  const close = function(){
-  	setVisible(false);
+  const handleColse = () => {
+    setVisible(false)
+    onClose && onClose()
   }
-  return (
-        <div style={{"display":visible?"block":"none"}}>
-          <div style={style} className={`el-alert ${type?"el-alert--"+type:"el-icon-information"}`}>
-            {
-              showIcon && <i className={`el-alert__icon ${description?"is-big":null}`} />
-            }
-            <div className="el-alert__content">
-              {
-                title && (
-                  <span className={`el-alert__title ${description? "is-bold":null}`}>{title}</span>
-                )
-              }
-              {
-                description && <p className="el-alert__description">{description}</p>
-              }
-              <div style={{"display":closable?"block":"none"}}>
-              <i className={`el-alert__closebtn ${closeText ? 'is-customed' : 'el-icon-close'}`} onClick={close}>{closeText}</i>
-              </div>
-            </div>
-          </div>
-        </div>
-  );
+  return visible ? 
+    <div 
+      className={classnames('xAlertWrap', type || 'warning')}
+      style={{
+        opacity: visible ? '1' : '0',
+        ...style
+      }}
+    >
+      <div className='alertMes'>{ message }</div>
+      <div className='alertDesc'>{ description }</div>
+      {
+        !!closable && <span className='closeBtn' onClick={handleColse}>{ closeText ? closeText : 'x' }</span>
+      }
+    </div> : null
 }
-
-export default Alert;
-
 
 Alert.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string,
-  type: PropTypes.string,
+  style: PropTypes.object,
   closable: PropTypes.bool,
   closeText: PropTypes.string,
-  showIcon: PropTypes.bool
+  message: PropTypes.string,
+  description: PropTypes.string,
+  type: PropTypes.string,
+  onClose: PropTypes.func
 }
 
-Alert.defaultProps = {
-  	description:"7777",
-  	title:"i am alert",
-  	closeText:"壮",
-  	closable:true
-};
+export default Alert
+

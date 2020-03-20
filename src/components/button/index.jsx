@@ -1,36 +1,15 @@
-import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag'
+import classnames from 'classnames'
+import './index.less'
 
-function Button(props) {
-    let { name, onClick, types } = props;
-
-    const query = gql`
-	{
-		books{
-			title
-		}
-	}
-		
-
-	`;
-    const { loading, error, data } = useQuery(query);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;    
-    console.log(data);
-    return (
-        <div onClick={onClick}>
-    {name}{types.a}
-    </div>
-    );
+/**
+ * @param {onClick} func 对外暴露的点击事件
+ * @param {className} string 自定义类名
+ * @param {type} string 按钮类型 primary | warning | info | default | pure
+ * @param {shape} string 按钮形状 circle | radius(默认)
+ */
+export default function Button(props) {
+  let { children, onClick, className, type, shape, block } = props
+  return <div className={classnames('xButton', 'ripple', type, shape, block ? 'block' : '', className)} onClick={onClick}>
+    { children }
+  </div>
 }
-
-export default Button;
-
-
-Button.defaultProps = {
-    onClick: function() {
-
-
-    }
-};
